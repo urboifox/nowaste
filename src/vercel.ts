@@ -16,9 +16,11 @@ async function bootstrap() {
 // Create and export the server
 let cachedServer: any;
 
-export const handler = async (req: any, res: any) => {
+const handler = async (req: any, res: any) => {
     if (!cachedServer) {
         cachedServer = await bootstrap();
     }
     return cachedServer(req, res);
 };
+
+export default handler;
