@@ -1,21 +1,21 @@
-// src/vercel.ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
-    app.enableCors();
+    app.enableCors(); // Enable CORS if needed
 
-    // Swagger setup
     const config = new DocumentBuilder().setTitle('Nowaste API').setVersion('1.0').build();
-    const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api/docs', app, document);
+    const documentFactory = () => SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api/docs', app, documentFactory);
 
     await app.init();
 
     // Get the HTTP adapter
     const expressApp = app.getHttpAdapter().getInstance();
+
+    // Export handler for serverless
     return expressApp;
 }
 
