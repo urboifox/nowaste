@@ -1,8 +1,8 @@
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
 import { AuthResponse } from './types/auth.types';
-import { UserResponse } from 'src/users/entities/user-response.entity';
+import { UserResponse } from '../users/entities/user-response.entity';
 export declare class AuthService {
     private userService;
     private jwtService;
