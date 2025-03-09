@@ -1,4 +1,4 @@
-import { User } from '../../users/entities/user.entity';
+import { UserResponse } from "src/users/entities/user-response.entity";
 
 export interface JwtPayload {
     userId: number;
@@ -7,6 +7,6 @@ export interface JwtPayload {
 };
 
 export interface AuthResponse {
-    user: Omit<User, 'password'>;
+    user: UserResponse;
     token: string;
 };
