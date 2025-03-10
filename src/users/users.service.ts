@@ -1,46 +1,46 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaService } from '../prisma/prisma.service';
-import { UserResponse } from './entities/user-response.entity';
-import { User } from './entities/user.entity';
+import { DatabaseService } from 'src/database/database.service';
+import { ResponseUtil } from 'src/common/utils/response.util';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginationUtil } from 'src/common/utils/pagination.util';
+import { ApiResponse } from 'src/common/types/responses.types';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
-    constructor(private db: PrismaService) {}
+    constructor(private readonly db: DatabaseService) {}
 
-    private notFound() {
-        throw new NotFoundException('User not found');
+    async create(data: CreateUserDto): Promise<ApiResponse<User>> {
+        const user = await this.db.user.create({ data });
+        return ResponseUtil.success<User>(user, 201, 'User created');
     }
 
-    async create(createUserDto: CreateUserDto): Promise<UserResponse> {
-        return this.db.user.create({ data: createUserDto });
+    async findAll(pagination: PaginationDto): Promise<ApiResponse<User[]>> {
+        const { data, meta } = await PaginationUtil.paginate<User>(this.db, 'user', pagination);
+        return ResponseUtil.success<User[]>(data, 200, 'Users found', meta);
     }
 
-    async findAll(): Promise<UserResponse[]> {
-        return this.db.user.findMany({ omit: { password: true } });
+    async findOne(id: number): Promise<ApiResponse<User>> {
+        const user = await this.db.user.findUnique({ where: { id } });
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+        return ResponseUtil.success(user, 200, 'User found');
     }
 
-    async findOne(id: number): Promise<UserResponse> {
-        const user = await this.db.user.findUnique({ where: { id }, omit: { password: true } });
-        if (!user) this.notFound();
-        return user;
-    }
-
-    async findOneByEmail(email: string): Promise<User> {
-        return this.db.user.findUnique({ where: { email } });
-    }
-
-    async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponse> {
-        const user = await this.db.user.update({
-            where: { id },
-            data: updateUserDto,
+    async update(id: number, data: UpdateUserDto): Promise<ApiResponse<User>> {
+        const user = await this.db.user.update({ where: { id }, data }).catch(() => {
+            throw new NotFoundException('User not found');
         });
-        if (!user) this.notFound();
-        return user;
+        return ResponseUtil.success(user, 200, 'User updated');
     }
 
-    async remove(id: number): Promise<UserResponse> {
-        return this.db.user.delete({ where: { id } });
+    async remove(id: number): Promise<ApiResponse<null>> {
+        await this.db.user.delete({ where: { id } }).catch(() => {
+            throw new NotFoundException('User not found');
+        });
+        return ResponseUtil.success(null, 204, 'User removed');
     }
 }

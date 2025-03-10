@@ -1,51 +1,71 @@
 import {
     Controller,
-    Get,
     Post,
     Body,
-    Patch,
-    Param,
-    Delete,
-    ParseIntPipe,
+    UsePipes,
     ValidationPipe,
+    Get,
+    Query,
+    Param,
+    ParseIntPipe,
+    Patch,
+    Delete,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UserResponseDto } from './dto/user-response.dto';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiResponse } from '@nestjs/swagger';
-import { UserResponse } from './entities/user-response.entity';
+import { ResponseUtil } from 'src/common/utils/response.util';
 
+@ApiTags('users')
 @Controller('users')
+@UsePipes(new ValidationPipe({ transform: true }))
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     @Post()
-    @ApiResponse({ status: 201, type: UserResponse })
-    create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
-        return this.usersService.create(createUserDto);
+    @ApiOperation({ summary: 'Create a new user' })
+    @ApiResponse({ status: 201, description: 'User created', type: UserResponseDto })
+    async create(@Body() createUserDto: CreateUserDto) {
+        const response = await this.usersService.create(createUserDto);
+        return ResponseUtil.transform(response, UserResponseDto);
     }
 
     @Get()
-    @ApiResponse({ status: 200, type: [UserResponse] })
-    findAll() {
-        return this.usersService.findAll();
+    @ApiOperation({ summary: 'Get all users' })
+    @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+    @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
+    @ApiResponse({ status: 200, description: 'List of users', type: [UserResponseDto] })
+    async findAll(@Query() pagination: PaginationDto) {
+        const response = await this.usersService.findAll(pagination);
+        return ResponseUtil.transform(response, UserResponseDto);
     }
 
     @Get(':id')
-    @ApiResponse({ status: 200, type: UserResponse })
-    findOne(@Param('id') id: string) {
-        return this.usersService.findOne(+id);
+    @ApiOperation({ summary: 'Get a user by ID' })
+    @ApiResponse({ status: 200, description: 'User details', type: UserResponseDto })
+    @ApiResponse({ status: 404, description: 'User not found' })
+    async findOne(@Param('id', ParseIntPipe) id: number) {
+        const response = await this.usersService.findOne(id);
+        return ResponseUtil.transform(response, UserResponseDto);
     }
 
     @Patch(':id')
-    @ApiResponse({ status: 200, type: UserResponse })
-    update(@Param('id', ParseIntPipe) id: string, @Body() updateUserDto: UpdateUserDto) {
-        return this.usersService.update(+id, updateUserDto);
+    @ApiOperation({ summary: 'Update a user by ID' })
+    @ApiResponse({ status: 200, description: 'User updated', type: UserResponseDto })
+    @ApiResponse({ status: 404, description: 'User not found' })
+    async update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
+        const response = await this.usersService.update(id, updateUserDto);
+        return ResponseUtil.transform(response, UserResponseDto);
     }
 
     @Delete(':id')
-    @ApiResponse({ status: 200, type: UserResponse })
-    remove(@Param('id', ParseIntPipe) id: string) {
-        return this.usersService.remove(+id);
+    @ApiOperation({ summary: 'Delete a user by ID' })
+    @ApiResponse({ status: 204, description: 'User deleted' })
+    @ApiResponse({ status: 404, description: 'User not found' })
+    async remove(@Param('id', ParseIntPipe) id: number) {
+        return await this.usersService.remove(id);
     }
 }

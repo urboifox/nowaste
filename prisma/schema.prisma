@@ -9,35 +9,16 @@ generator client {
 }
 
 datasource db {
-    provider = "postgresql"
+    provider = "sqlite"
     url      = env("DATABASE_URL")
-}
-
-model ProductStatus {
-    id   Int    @id @default(autoincrement())
-    name String
-    // products Product[]
-}
-
-model Product {
-    id        Int      @id @default(autoincrement())
-    name      String
-    isForSale Boolean  @default(false)
-    isSold    Boolean  @default(false)
-    isExpired Boolean  @default(false)
-    price     Int      @default(0)
-    // user User @relation(fields: [userId], references: [id])
-    // userId Int
-    // status ProductStatus @relation(fields: [statusId], references: [id])
-    // statusId Int
-    createdAt DateTime @default(now())
 }
 
 model User {
     id        Int      @id @default(autoincrement())
     name      String
+    username  String   @unique
     email     String   @unique
     password  String
-    // products Product[]
     createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
