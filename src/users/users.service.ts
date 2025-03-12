@@ -4,10 +4,10 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { DatabaseService } from 'src/database/database.service';
 import { ResponseUtil } from 'src/common/utils/response.util';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { PaginationUtil } from 'src/common/utils/pagination.util';
 import { ApiResponse } from 'src/common/types/responses.types';
 import { User } from '@prisma/client';
 import { I18nService } from 'nestjs-i18n';
+import { PaginationUtil } from 'src/common/utils/pagination.util';
 
 @Injectable()
 export class UsersService {
@@ -27,7 +27,7 @@ export class UsersService {
     }
 
     async findOne(id: number): Promise<ApiResponse<User>> {
-        const user = await this.db.user.findUnique({ where: { id } })
+        const user = await this.db.user.findUnique({ where: { id } });
         if (!user) {
             throw new NotFoundException(this.i18n.t('errors.resource_not_found'));
         }
