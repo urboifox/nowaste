@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { DatabaseService } from 'src/database/database.service';
-import { ResponseUtil } from 'src/common/utils/response.util';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { ApiResponse } from 'src/common/types/responses.types';
+import { DatabaseService } from '../../src/database/database.service';
+import { ResponseUtil } from '../../src/common/utils/response.util';
+import { PaginationDto } from '../../src/common/dto/pagination.dto';
+import { ApiResponse } from '../../src/common/types/responses.types';
 import { User } from '@prisma/client';
 import { I18nService } from 'nestjs-i18n';
-import { PaginationUtil } from 'src/common/utils/pagination.util';
+import { PaginationUtil } from '../../src/common/utils/pagination.util';
 
 @Injectable()
 export class UsersService {
