@@ -6,9 +6,13 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { I18nService, I18nValidationPipe } from 'nestjs-i18n';
 
+const prefix = 'api/v1';
+
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.enableCors();
+
+    app.setGlobalPrefix(prefix);
 
     // INFO: Validates DTOs and throws I18nValidationException for invalid data.
     app.useGlobalPipes(new I18nValidationPipe({ transform: true, whitelist: true }));
@@ -19,7 +23,7 @@ async function bootstrap() {
 
     const config = new DocumentBuilder().setTitle('Nowaste API').setVersion('1.0').build();
     const documentFactory = () => SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api/docs', app, documentFactory);
+    SwaggerModule.setup(prefix + '/docs', app, documentFactory);
 
     await app.listen(3000);
 }

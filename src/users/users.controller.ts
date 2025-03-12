@@ -25,11 +25,6 @@ import { ResponseUtil } from 'src/common/utils/response.util';
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
-    @Get('/debug-sentry')
-    getError() {
-        throw new Error('My first Sentry error!');
-    }
-
     @Post()
     @ApiOperation({ summary: 'Create a new user' })
     @ApiResponse({ status: 201, description: 'User created', type: UserResponseDto })
