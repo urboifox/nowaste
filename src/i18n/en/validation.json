@@ -1,0 +1,5 @@
+{
+    "isString": "this field must be a string",
+    "isEmail": "this field must be an email",
+    "minLength": "this field must be longer than or equal to {constraint} characters"
+}

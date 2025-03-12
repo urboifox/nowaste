@@ -2,14 +2,14 @@ import {
     Controller,
     Post,
     Body,
-    UsePipes,
-    ValidationPipe,
     Get,
     Query,
     Param,
     ParseIntPipe,
     Patch,
     Delete,
+    ValidationPipe,
+    UsePipes,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -24,6 +24,11 @@ import { ResponseUtil } from 'src/common/utils/response.util';
 @UsePipes(new ValidationPipe({ transform: true }))
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
+
+    @Get('/debug-sentry')
+    getError() {
+        throw new Error('My first Sentry error!');
+    }
 
     @Post()
     @ApiOperation({ summary: 'Create a new user' })

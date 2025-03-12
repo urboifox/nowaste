@@ -1,0 +1,5 @@
+{
+    "resource_not_found": "Resource not found",
+    "validation_failed": "Validation failed",
+    "unknown": "An unexpected error occurred"
+}

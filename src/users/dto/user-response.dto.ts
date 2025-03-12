@@ -8,7 +8,7 @@ export class UserResponseDto {
 
     @ApiProperty({ example: 'John Doe', description: 'The name of the user' })
     @Expose()
-    name: string;
+    fullname: string;
 
     @ApiProperty({ example: 'johndoe', description: 'The username of the user' })
     @Expose()

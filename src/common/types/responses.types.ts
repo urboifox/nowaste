@@ -10,4 +10,5 @@ export interface ApiResponse<T> {
     data: T | null;
     meta?: Meta;
     message?: string;
+    errors?: { [key: string]: string[] };
 }

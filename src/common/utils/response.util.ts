@@ -6,8 +6,13 @@ export class ResponseUtil {
         return { status: 'success', statusCode, data, meta, message };
     }
 
-    static error(statusCode: number, message: string, data = null): ApiResponse<null> {
-        return { status: 'error', statusCode, data, message };
+    static error(
+        statusCode: number,
+        message: string,
+        data = null,
+        errors?: Record<string, string[]>,
+    ): ApiResponse<null> {
+        return { status: 'error', statusCode, errors, data, message };
     }
 
     static transform<T, R>(

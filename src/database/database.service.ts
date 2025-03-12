@@ -5,11 +5,6 @@ import { PrismaClient } from '@prisma/client';
 export class DatabaseService extends PrismaClient implements OnModuleInit {
     async onModuleInit() {
         await this.$connect();
-        console.log('Prisma connection established');
-    }
-
-    async onModuleDestroy() {
-        await this.$disconnect();
-        console.log('Prisma connection closed');
+        console.log('Database connection established');
     }
 }

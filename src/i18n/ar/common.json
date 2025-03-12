@@ -1,0 +1,6 @@
+{
+    "data_success": "تم جلب البيانات بنجاح",
+    "resource_created": "تم إنشاء المورد بنجاح",
+    "resource_updated": "تم تحديث المورد بنجاح",
+    "resource_removed": "تم حذف المورد بنجاح"
+}

@@ -1,0 +1,6 @@
+{
+    "data_success": "Data fetched successfully",
+    "resource_created": "Resource created successfully",
+    "resource_updated": "Resource updated successfully",
+    "resource_removed": "Resource removed successfully"
+}
